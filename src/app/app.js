@@ -20,6 +20,16 @@ app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
 
+//To turn this off, comment this section out. Requires Bearer Token
+app.use(function validateAPIKey(req,res,next) {
+  let API_KEY = process.env.API_KEY;
+  let userKey = req.get('Authorization');
+
+  if (!userKey || API_KEY !== userKey.split(' ')[1]) {
+    return res.status(401).send('Not authorized');
+  }
+  next();
+}); 
 
 //Endpoints
 app.use('/noteful/api',router);
