@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { NODE_ENV, API_KEY } = require('./config');
+const { NODE_ENV, API_TOKEN } = require('./config');
 
 const express = require('express');
 const app = express();
@@ -24,7 +24,7 @@ app.use(cors());
 app.use(function validateAPIKey(req,res,next) {
   let userKey = req.get('Authorization');
 
-  if (!userKey || API_KEY !== userKey.split(' ')[1]) {
+  if (!userKey || API_TOKEN !== userKey.split(' ')[1]) {
     return res.status(401).send('Not authorized');
   }
   next();
