@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { NODE_ENV } = require('./config');
+const { NODE_ENV, API_KEY } = require('./config');
 
 const express = require('express');
 const app = express();
@@ -21,15 +21,14 @@ app.use(helmet());
 app.use(cors());
 
 //To turn this off, comment this section out. Requires Bearer Token
-// app.use(function validateAPIKey(req,res,next) {
-//   let API_KEY = process.env.API_KEY;
-//   let userKey = req.get('Authorization');
+app.use(function validateAPIKey(req,res,next) {
+  let userKey = req.get('Authorization');
 
-//   if (!userKey || API_KEY !== userKey.split(' ')[1]) {
-//     return res.status(401).send('Not authorized');
-//   }
-//   next();
-// }); 
+  if (!userKey || API_KEY !== userKey.split(' ')[1]) {
+    return res.status(401).send('Not authorized');
+  }
+  next();
+}); 
 
 //Endpoints
 app.use('/noteful/api',router);
